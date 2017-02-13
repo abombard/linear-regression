@@ -2,8 +2,8 @@
 
 import sys, csv
 
-learningRate = 0.5
-maxiteration = 100
+learningRate = 0.93
+maxiteration = 10000
 
 def readTetasFromCsv(filename):
     try:
@@ -73,25 +73,28 @@ def stepGradient(teta0, teta1, datas, learningRate):
     teta1_gradient = 0
     M = float(len(datas))
     for km, price in datas:
-        estimatePrice = teta0 + (teta1 * km)
-        teta0_gradient += (estimatePrice - price)
-        teta1_gradient += ((estimatePrice - price) * km)
-    new_teta0 = teta0 - (learningRate / M * teta0_gradient)
-    new_teta1 = teta1 - (learningRate / M * teta1_gradient)
-    return new_teta0, new_teta1
+        priceDiff = teta0 + (teta1 * km) - price
+        teta0_gradient += priceDiff
+        teta1_gradient += priceDiff * km
+        teta0 = teta0 - (learningRate / M * teta0_gradient)
+        teta1 = teta1 - (learningRate / M * teta1_gradient)
+    return teta0, teta1
 
 # main
 teta0, teta1 = readTetasFromCsv('teta.csv')
 datas = readDatasFromCsv('data.csv')
 
+# scale
 minKm = min(datas,key=lambda item:item[0])[0]
 maxKm = max(datas,key=lambda item:item[0])[0]
 
 datas = scaleDatas(datas, minKm, maxKm)
 
+# gradient descend
 for i in range(maxiteration):
     teta0, teta1 = stepGradient(teta0, teta1, datas, learningRate)
 
+# unscale
 teta1 = teta1 / (maxKm - minKm)
 
 writeTetasToCsv('teta.csv', teta0, teta1)
