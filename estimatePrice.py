@@ -8,26 +8,17 @@ except:
     print "Usage: " + sys.argv[0] + " <km>"
     sys.exit(2)
 
-def readTetasFromCsv(filename):
-    try:
-        with open('teta.csv', 'rb') as csvfile:
-            spamreader = csv.reader(
-                    csvfile,
-                    delimiter=',',
-                    quotechar='|'
-            )
-            row1 = next(spamreader)
-            row2 = next(spamreader)
+import file
 
-            teta0 = float(row2[0])
-            teta1 = float(row2[1])
-    except:
-        teta0 = 0
-        teta1 = 0
+teta0, teta1 = file.readTetasFromCsv()
+datas = file.readDatasFromCsv()
 
-    return float(teta0), float(teta1)
+def scaleData(v, minV, maxV):
+    return (v - minV) / (maxV - minV)
 
-teta0, teta1 = readTetasFromCsv('teta.csv')
-price = float(teta0 + (teta1 * km))
+minKm = min(datas,key=lambda item:item[0])[0]
+maxKm = max(datas,key=lambda item:item[0])[0]
+
+price = teta0 + (teta1 * scaleData(km, minKm, maxKm))
 
 print price

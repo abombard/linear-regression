@@ -3,58 +3,26 @@ import sys, csv
 from plotly.offline import plot
 import plotly.graph_objs as go
 
-def readDatasFromCsv(filename):
-    datas = []
+import file
 
-    try:
-        with open(filename, 'rb') as datafile:
-            reader = csv.reader(
-                datafile,
-                delimiter=',',
-                quotechar='|'
-            )
-            junk = next(reader)
-
-            for km, price in reader:
-                datas.append((float(km), float(price)))
-    except:
-        print filename, "is unreachable"
-        sys.exit(1)
-    
-    return datas
-
-def readTetasFromCsv(filename):
-    try:
-        with open('teta.csv', 'rb') as csvfile:
-            spamreader = csv.reader(
-                    csvfile,
-                    delimiter=',',
-                    quotechar='|'
-            )
-            row1 = next(spamreader)
-            row2 = next(spamreader)
-
-            teta0 = float(row2[0])
-            teta1 = float(row2[1])
-    except:
-        teta0 = 0
-        teta1 = 0
-
-    return float(teta0), float(teta1)
-
-
-datas = readDatasFromCsv('data.csv')
-teta0, teta1 = readTetasFromCsv('teta.csv')
+datas = file.readDatasFromCsv()
+teta0, teta1 = file.readTetasFromCsv()
 
 xList = [x for x, y in datas]
 yList = [y for x, y in datas]
 
 points = [go.Scatter(x = xList, y = yList, mode = 'markers')]
 
-x0 = 22899
-y0 = teta0 + teta1 * x0
-x1 = 240000
-y1 = teta0 + teta1 * x1
+def scaleData(v, minV, maxV):
+    return (v - minV) / (maxV - minV)
+
+minKm = min(datas,key=lambda item:item[0])[0]
+maxKm = max(datas,key=lambda item:item[0])[0]
+
+x0 = minKm
+y0 = teta0 + teta1 * scaleData(x0, minKm, maxKm)
+x1 = maxKm
+y1 = teta0 + teta1 * scaleData(x1, minKm, maxKm)
 
 layout = {
     'shapes': [
