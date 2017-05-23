@@ -14,4 +14,4 @@ ExSquare = sum([x ** 2 for x, y in datas])
 teta1 = (Exy - (Ex * Ey) / N ) / (ExSquare - (Ex ** 2 / N))
 teta0 = (Ey - (teta1 * Ex)) / N
 
-writeTetasToCsv(teta0, teta1)
+file.writeTetasToCsv(teta0, teta1)
