@@ -48,6 +48,6 @@ def readDatasFromCsv():
     except:
         print "datas.csv is unreachable"
         sys.exit(1)
-    
+
     return datas
 

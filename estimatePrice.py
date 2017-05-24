@@ -1,11 +1,25 @@
-#!/usr/bin/python
+#!/Users/abombard/.brew/bin/python
 
 import sys, csv
 
+if len(sys.argv) != 2 and len(sys.argv) != 3:
+    print "Usage: " + sys.argv[0] + " [-g|-l] <km>"
+    sys.exit()
+
+method = "-g"
+if len(sys.argv) == 3:
+    method = sys.argv[1]
+    if method != "-g" and method != "-l":
+        print "Usage: " + sys.argv[0] + " [-g|-l] <km>"
+        sys.exit()
+
 try:
-    km = float(sys.argv[1])
+    if len(sys.argv) == 2:
+        km = float(sys.argv[1])
+    else:
+        km = float(sys.argv[2])
 except:
-    print "Usage: " + sys.argv[0] + " <km>"
+    print "Usage: " + sys.argv[0] + " [-g|-l] <km>"
     sys.exit(2)
 
 import file

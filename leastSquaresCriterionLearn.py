@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/Users/abombard/.brew/bin/python
 
 import sys, csv
 import file
